@@ -4,10 +4,8 @@
     <v-app-bar
       app
       flat
-      color="white"
     >
       <v-btn
-        v-if="$route.name !== 'index'"
         color="white"
         elevation="1"
         light
@@ -15,6 +13,7 @@
         rounded
         to="/"
         nuxt
+        :disabled="$route.name === 'index'"
       >
         <v-icon small>
           mdi-cube-outline mdi-spin
@@ -23,7 +22,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-container class="py-4 py-sm-10 py-md-16">
+      <v-container class="py-6 py-sm-10 py-md-16">
         <!-- Snackbar -->
         <v-snackbar
           v-model="snackbar"

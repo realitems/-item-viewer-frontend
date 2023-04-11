@@ -23,10 +23,11 @@ export default {
   // https://nuxtjs.org/docs/configuration-glossary/configuration-loading
   loading: {
     color: "#f0f0f0",
+    failedColor: "#f0f0f0",
     height: "4px",
     continuous: true,
   },
-  
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 

@@ -202,7 +202,7 @@ export default {
 }
 
 .light-hr {
-  border-bottom: 0.1px solid #f0f0f0 !important;
+  border-bottom: 0.1px solid #f0f0f0;
 }
 
 .details {
