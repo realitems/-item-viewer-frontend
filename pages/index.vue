@@ -21,6 +21,8 @@
       nuxt
       block
       outlined
+      :loading="loading"
+      @click="loading = true"
     >
       View Item
     </v-btn>
@@ -31,6 +33,7 @@
 export default {
   data: () => ({
     itemId: undefined,
+    loading: false,
   }),
 
   // Compute if itemId is in uuid v4 format

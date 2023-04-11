@@ -22,8 +22,8 @@ export default {
 
   // https://nuxtjs.org/docs/configuration-glossary/configuration-loading
   loading: {
-    color: "#f0f0f0",
-    failedColor: "#f0f0f0",
+    color: "#E0E0E0",
+    failedColor: "#E0E0E0",
     height: "4px",
     continuous: true,
   },
