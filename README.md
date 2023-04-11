@@ -2,7 +2,8 @@
 
 This is the frontend for the Item Viewer demo application. It is a Vue web app built with Nuxt and Vuetify. It connects to the Item Viewer backend to retrieve item data, then displays the data in the UI.
 
-Note: Before using the frontend, you must first deploy the Item Viewer backend. [https://github.com/realitems/item-viewer-backend](https://github.com/realitems/item-viewer-backend)
+Note: Before using the frontend, you must first deploy the Item Viewer backend.  
+[https://github.com/realitems/item-viewer-backend](https://github.com/realitems/item-viewer-backend)
 
 ## Usage
 
