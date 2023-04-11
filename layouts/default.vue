@@ -7,12 +7,14 @@
       color="white"
     >
       <v-btn
+        v-if="$route.name !== 'index'"
         color="white"
         elevation="1"
         light
         small
         rounded
-        @click="$router.push('/')"
+        to="/"
+        nuxt
       >
         <v-icon small>
           mdi-cube-outline mdi-spin

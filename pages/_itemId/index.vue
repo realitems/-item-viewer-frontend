@@ -196,7 +196,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="SCSS" scoped>
 .card-width {
   width: 500px;
 }

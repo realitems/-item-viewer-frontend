@@ -4,7 +4,7 @@ export default {
 
   // server: {
   //   port: 8000,
-  //   host: '0.0.0.0',
+  //   host: "0.0.0.0",
   // },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -24,8 +24,9 @@ export default {
   loading: {
     color: "#f0f0f0",
     height: "4px",
+    continuous: true,
   },
-
+  
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
