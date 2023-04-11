@@ -6,6 +6,7 @@
       flat
     >
       <v-btn
+        v-if="$route.name !== 'index'"
         color="white"
         elevation="1"
         light
@@ -13,7 +14,20 @@
         rounded
         to="/"
         nuxt
-        :disabled="$route.name === 'index'"
+      >
+        <v-icon small>
+          mdi-cube-outline mdi-spin
+        </v-icon>
+      </v-btn>
+
+      <v-btn
+        v-else
+        color="white"
+        elevation="1"
+        light
+        small
+        rounded
+        style="pointer-events: none"
       >
         <v-icon small>
           mdi-cube-outline mdi-spin
