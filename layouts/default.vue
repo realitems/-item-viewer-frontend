@@ -2,29 +2,26 @@
   <v-app>
     <!-- App bar -->
     <v-app-bar
-      dark
       app
       flat
+      color="white"
     >
-      <!-- Overlay button -->
       <v-btn
         color="white"
+        elevation="1"
         light
         small
         rounded
+        @click="$router.push('/')"
       >
-        <v-icon
-          small
-          class="mr-1"
-        >
+        <v-icon small>
           mdi-cube-outline mdi-spin
         </v-icon>
-        {{ "Real Items" }}
       </v-btn>
     </v-app-bar>
 
     <v-main>
-      <v-container class="py-4 py-sm-6 py-md-8">
+      <v-container class="py-4 py-sm-10 py-md-16">
         <!-- Snackbar -->
         <v-snackbar
           v-model="snackbar"
@@ -57,7 +54,7 @@
     </v-main>
 
     <v-footer
-      height="200"
+      height="100"
       absolute
       app
       color="transparent"

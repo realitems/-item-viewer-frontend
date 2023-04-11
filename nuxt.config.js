@@ -20,6 +20,12 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
 
+  // https://nuxtjs.org/docs/configuration-glossary/configuration-loading
+  loading: {
+    color: "#f0f0f0",
+    height: "4px",
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 

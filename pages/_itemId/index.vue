@@ -3,8 +3,6 @@
     <v-row justify="center">
       <v-col
         cols="auto"
-        md="6"
-        lg="auto"
         class="card-width"
       >
         <v-card>
@@ -72,7 +70,12 @@
               </div>
             </div>
 
-            <div class="details mt-4">
+            <div
+              v-if="item.batchId && metadata.description"
+              class="my-2"
+            />
+
+            <div class="details">
               ITEM ID: {{ item.itemId }}
               <br>
 
