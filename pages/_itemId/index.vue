@@ -5,12 +5,13 @@
         cols="auto"
         class="card-width"
       >
+        <!-- ** Item card -->
         <v-card>
           <!-- ** Card header -->
           <v-card-subtitle>
             <v-row>
               <v-col cols="auto">
-                {{ metadata.name ?? "Untitled" }}
+                {{ item.metadata.name ?? "Untitled" }}
               </v-col>
               <v-col
                 cols="auto"
@@ -38,9 +39,9 @@
 
           <!-- ** Image -->
           <v-img
-            v-if="metadata.image"
+            v-if="item.metadata.image"
             contain
-            :src="metadata.image"
+            :src="item.metadata.image"
             max-width="100%"
             aspect-ratio="1"
           >
@@ -65,13 +66,13 @@
                 BATCH ID: {{ item.batchId }}
               </div>
 
-              <div v-if="metadata.description">
-                DESCRIPTION: {{ metadata.description }}
+              <div v-if="item.metadata.description">
+                DESCRIPTION: {{ item.metadata.description }}
               </div>
             </div>
 
             <div
-              v-if="item.batchId && metadata.description"
+              v-if="item.batchId && item.metadata.description"
               class="my-2"
             />
 
@@ -110,6 +111,85 @@
             </div>
           </v-card-text>
         </v-card>
+
+        <!-- ** Memories button -->
+        <div class="text-center mt-8">
+          <v-btn
+            v-if="memoriesStatus === 'not checked'"
+            class="pulse-button grey--text"
+            elevation="1"
+            color="white"
+            light
+            rounded
+            small
+            width="210"
+            @click="viewMemories"
+          >
+            View memories
+          </v-btn>
+
+          <v-btn
+            v-else
+            class="grey--text"
+            :class="{
+              'pulse-button': memoriesStatus === 'checking',
+            }"
+            elevation="1"
+            color="white"
+            light
+            rounded
+            small
+            width="210"
+            style="pointer-events: none"
+          >
+            {{
+              // Show different text depending on status
+              memoriesStatus === "checking"
+                ? "Checking ..."
+                : memoriesStatus === "no memories"
+                  ? "No memories found"
+                  : "Memories"
+            }}
+          </v-btn>
+        </div>
+
+        <!-- Memory cards.. -->
+        <v-card
+          v-for="memory in memories"
+          :key="memory.memoryId"
+          class="mt-8"
+        >
+          <!-- ** Card header -->
+          <v-card-subtitle>
+            <v-row>
+              <v-col
+                class="details-full"
+                cols="auto"
+              >
+                FROM: {{ memory.from }}
+              </v-col>
+              <v-col
+                v-if="memory.transactionUrl"
+                cols="auto"
+                class="ml-auto"
+              >
+                <a
+                  :href="memory.transactionUrl"
+                  target="_blank"
+                >
+                  <v-icon>mdi-arrow-top-right</v-icon>
+                </a>
+              </v-col>
+            </v-row>
+          </v-card-subtitle>
+
+          <v-divider class="light-hr" />
+
+          <!-- ** Card text -->
+          <v-card-text class="text-caption">
+            <pre>{{ JSON.stringify(memory.metadata, null, 2) }}</pre>
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </div>
@@ -136,6 +216,8 @@ export default {
     // Get item data
     try {
       const getItemResponse = await $getItem(itemId);
+
+      console.log("Item response: ", getItemResponse);
 
       // Check status of API call
       const status = getItemResponse?.data?.status;
@@ -168,16 +250,16 @@ export default {
       item.ipfsUrl = `https://ipfs.realitems.io/ipfs/${item.metadataHash}`;
 
       // Parse metadata
-      const metadata = JSON.parse(item.metadata);
-      console.log("Item metadata: ", metadata);
+      item.metadata = JSON.parse(item.metadata);
+      console.log("Item metadata: ", item.metadata);
 
       // If metadata.image is ipfs://, create URL to IPFS image
-      if (metadata.image && metadata.image.startsWith("ipfs://")) {
-        const ipfsHash = metadata.image.split("ipfs://")[1];
-        metadata.image = `https://ipfs.realitems.io/ipfs/${ipfsHash}`;
+      if (item.metadata.image && item.metadata.image.startsWith("ipfs://")) {
+        const ipfsHash = item.metadata.image.split("ipfs://")[1];
+        item.metadata.image = `https://ipfs.realitems.io/ipfs/${ipfsHash}`;
       }
 
-      return { item, metadata };
+      return { item };
     } catch (error) {
       console.error(error);
       // TODO: Use better errors and show in UI
@@ -187,12 +269,60 @@ export default {
 
   data: () => ({
     // item: is defined in asyncData
-    // metadata: is defined in asyncData
+    memoriesStatus: "not checked",
+    memories: undefined,
   }),
 
   created() {},
 
-  methods: {},
+  methods: {
+    async viewMemories() {
+      this.memoriesStatus = "checking";
+
+      try {
+        const listMemoriesResponse = await this.$listMemoriesByItemId(
+          this.item.itemId
+        );
+
+        console.log("Memories response: ", listMemoriesResponse);
+
+        // Check status of API call
+        const status = listMemoriesResponse?.data?.status;
+        if (!status || !status.success) {
+          throw new Error("Error getting memories");
+        }
+
+        const memories = listMemoriesResponse.data.body;
+
+        if (memories.length > 0) {
+          this.memories = memories.map((memory) => {
+            memory.metadata = JSON.parse(memory.metadata);
+            console.log("Memory: ", memory);
+
+            memory.from = memory.metadata.from ?? "Unknown";
+            delete memory.metadata.from;
+
+            const networkPrefix =
+              memory.blockchainNetwork === "mumbai" ? "mumbai." : "";
+
+            // Create URL to blockchain transaction
+            if (memory.mintTransaction.hash) {
+              memory.transactionUrl = `https://${networkPrefix}polygonscan.com/tx/${memory.mintTransaction.hash}`;
+            }
+
+            return memory;
+          });
+
+          this.memoriesStatus = "memories";
+        } else {
+          this.memoriesStatus = "no memories";
+        }
+      } catch (error) {
+        console.error(error);
+        this.memoriesStatus = "no memories";
+      }
+    },
+  },
 };
 </script>
 
@@ -218,9 +348,31 @@ export default {
   font-family: monospace;
 }
 
+/* Class that makes a button pulse  */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pulse-button {
+  animation: pulse 2.5s infinite;
+}
+
 /* Fix image skeleton loader */
 /* https://github.com/vuetifyjs/vuetify/issues/11771 */
 ::v-deep .v-skeleton-loader > * {
   height: 100%;
+}
+
+pre {
+  white-space: pre-wrap; /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 </style>
