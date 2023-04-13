@@ -5,7 +5,7 @@
       color="grey"
       label="ITEM ID"
       placeholder="Enter item ID"
-      hint="Example: f7d62b56-1c44-4e77-a3c9-11a9b9a5c3de"
+      hint="Example: 48094d2d-0cfd-47f5-b7f2-b24b570fb15f"
       persistent-hint
       persistent-placeholder
       outlined
