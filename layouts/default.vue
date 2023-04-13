@@ -79,7 +79,7 @@
           Learn more at
           <a
             target="_blank"
-            href="https://docs.realitems.io/"
+            href="https://docs.realitems.io/realitems-api/examples/item-viewer"
           >
             docs.realitems.io
           </a>
